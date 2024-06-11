@@ -2,15 +2,15 @@
 
 GIB_IN_BYTES="1073741824"
 
-target="${1:-pi1}"
+target="${1:-pi3}"
 image_path="/sdcard/filesystem.img"
-zip_path="/filesystem.zip"
+zip_path="/filesystem.img.xz"
 
 if [ ! -e $image_path ]; then
   echo "No filesystem detected at ${image_path}!"
   if [ -e $zip_path ]; then
       echo "Extracting fresh filesystem..."
-      unzip $zip_path
+      unxz -v $zip_path
       mv -- *.img $image_path
   else
     exit 1
@@ -18,7 +18,8 @@ if [ ! -e $image_path ]; then
 fi
 
 qemu-img info $image_path
-image_size_in_bytes=$(qemu-img info --output json $image_path | grep "virtual-size" | awk '{print $2}' | sed 's/,//')
+image_size_in_bytes=$(qemu-img info --output json $image_path | grep "virtual-size" | head -1 | awk '{print $2}' | sed 's/,//')
+
 if [[ "$(($image_size_in_bytes % ($GIB_IN_BYTES * 2)))" != "0" ]]; then
   new_size_in_gib=$((($image_size_in_bytes / ($GIB_IN_BYTES * 2) + 1) * 2))
   echo "Rounding image size up to ${new_size_in_gib}GiB so it's a multiple of 2GiB..."

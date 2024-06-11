@@ -1,74 +1,80 @@
+# dockerpi-ng
+
 <div align="center">
-	<img width="256" src="media/logo.svg">
+    <img width="256" src="media/logo.svg" alt="dockerpi-ng logo">
 </div>
 
-# dockerpi
-
-[![Docker Pulls](https://badgen.net/docker/pulls/lukechilds/dockerpi?icon=docker&label=Docker%20pulls)](https://hub.docker.com/r/lukechilds/dockerpi/)
-[![Docker Image Size](https://badgen.net/docker/size/lukechilds/dockerpi/latest/amd64?icon=docker&label=lukechilds/dockerpi)](https://hub.docker.com/r/lukechilds/dockerpi/tags)
-[![GitHub Donate](https://badgen.net/badge/GitHub/Sponsor/D959A7?icon=github)](https://github.com/sponsors/lukechilds)
-[![Bitcoin Donate](https://badgen.net/badge/Bitcoin/Donate/F19537?icon=bitcoin)](https://lu.ke/tip/bitcoin)
-[![Lightning Donate](https://badgen.net/badge/Lightning/Donate/F6BC41?icon=bitcoin-lightning)](https://lu.ke/tip/lightning)
+This is a fork of [dockerpi](https://github.com/lukechilds/dockerpi).
 
 > A Virtualised Raspberry Pi inside a Docker image
 
-Gives you access to a virtualised ARM based Raspberry Pi machine running the Raspian operating system.
+Gives you access to a virtualised ARM based Raspberry Pi machine running the
+Raspian operating system.
 
-This is not just a Raspian Docker image, it's a full ARM based Raspberry Pi virtual machine environment.
+This is not just a Raspian Docker image, it's a full ARM based Raspberry Pi
+virtual machine environment.
 
-<div align="center">
-	<img src="media/demo.svg" width="720">
-</div>
+<!-- <div align="center">
+    <img src="media/demo.svg" width="720">
+</div> -->
 
 ## Usage
 
-```
-docker run -it lukechilds/dockerpi
+```bash
+docker run -it ghcr.io/schmidt-software/dockerpi-ng
 ```
 
-By default all filesystem changes will be lost on shutdown. You can persist filesystem changes between reboots by mounting the `/sdcard` volume on your host:
+By default all filesystem changes will be lost on shutdown. You can persist
+filesystem changes between reboots by mounting the `/sdcard` volume on your host:
 
-```
-docker run -it -v $HOME/.dockerpi:/sdcard lukechilds/dockerpi
+```bash
+docker run -it -v $HOME/.dockerpi:/sdcard ghcr.io/schmidt-software/dockerpi-ng
 ```
 
 If you have a specific image you want to mount you can mount it at `/sdcard/filesystem.img`:
 
-```
-docker run -it -v /2019-09-26-raspbian-buster-lite.img:/sdcard/filesystem.img lukechilds/dockerpi
+```bash
+docker run -it -v /2019-09-26-raspbian-buster-lite.img:/sdcard/filesystem.img ghcr.io/schmidt-software/dockerpi-ng
 ```
 
-If you only want to mount your own image, you can download a much slimmer VM only Docker container that doesn't contain the Raspbian filesystem image:
+If you only want to mount your own image, you can download a much slimmer VM
+only Docker container that doesn't contain the Raspbian filesystem image:
 
-[![Docker Image Size](https://badgen.net/docker/size/lukechilds/dockerpi/latest/amd64?icon=docker&label=lukechilds/dockerpi:latest)](https://hub.docker.com/r/lukechilds/dockerpi/tags?name=latest)
-[![Docker Image Size](https://badgen.net/docker/size/lukechilds/dockerpi/vm/amd64?icon=docker&label=lukechilds/dockerpi:vm)](https://hub.docker.com/r/lukechilds/dockerpi/tags?name=vm)
+<!-- [![Docker Image Size](https://badgen.net/docker/size/lukechilds/dockerpi/latest/amd64?icon=docker&label=lukechilds/dockerpi:latest)](https://hub.docker.com/r/lukechilds/dockerpi/tags?name=latest)
+[![Docker Image Size](https://badgen.net/docker/size/lukechilds/dockerpi/vm/amd64?icon=docker&label=lukechilds/dockerpi:vm)](https://hub.docker.com/r/lukechilds/dockerpi/tags?name=vm) -->
 
-```
+```bash
 docker run -it -v /2019-09-26-raspbian-buster-lite.img:/sdcard/filesystem.img lukechilds/dockerpi:vm
 ```
 
 ## Which machines are supported?
 
-By default a Raspberry Pi 1 is virtualised, however experimental support has been added for Pi 2 and Pi 3 machines.
+By default a Raspberry Pi 1 is virtualised, however experimental support has
+been added for Pi 2 and Pi 3 machines.
 
 You can specify a machine by passing the name as a CLI argument:
 
-```
-docker run -it lukechilds/dockerpi pi1
-docker run -it lukechilds/dockerpi pi2
-docker run -it lukechilds/dockerpi pi3
+```bash
+docker run -it ghcr.io/schmidt-software/dockerpi-ng pi1
+docker run -it ghcr.io/schmidt-software/dockerpi-ng pi2
+docker run -it ghcr.io/schmidt-software/dockerpi-ng pi3
 ```
 
-> **Note:** In the Pi 2 and Pi 3 machines, QEMU hangs once the machines are powered down requiring you to `docker kill` the container. See [#4](https://github.com/lukechilds/dockerpi/pull/4) for details.
-
+> **Note:** In the Pi 2 and Pi 3 machines, QEMU hangs once the machines are
+powered down requiring you to `docker kill` the container. See
+[#4](https://github.com/lukechilds/dockerpi/pull/4) for details.
 
 ## Wait, what?
 
-A full ARM environment is created by using Docker to bootstrap a QEMU virtual machine. The Docker QEMU process virtualises a machine with a single core ARM11 CPU and 256MB RAM, just like the Raspberry Pi. The official Raspbian image is mounted and booted along with a modified QEMU compatible kernel.
+A full ARM environment is created by using Docker to bootstrap a QEMU virtual
+machine. The Docker QEMU process virtualises a machine with a single core ARM11
+CPU and 256MB RAM, just like the Raspberry Pi. The official Raspbian image is
+mounted and booted along with a modified QEMU compatible kernel.
 
-You'll see the entire boot process logged to your TTY until you're prompted to log in with the username/password pi/raspberry.
+You'll see the entire boot process logged to your TTY until you're prompted to
+log in with the username/password pi/raspberry.
 
-```
+```bash
 pi@raspberrypi:~$ uname -a
 Linux raspberrypi 4.19.50+ #1 Tue Nov 26 01:49:16 CET 2019 armv6l GNU/Linux
 pi@raspberrypi:~$ cat /etc/os-release | head -n 1
@@ -97,20 +103,21 @@ Swap:          99Mi          0B        99Mi
 
 Build this image yourself by checking out this repo, `cd` ing into it and running:
 
-```
-docker build -t lukechilds/dockerpi .
+```bash
+docker build -t ghcr.io/schmidt-software/dockerpi-ng .
 ```
 
 Build the VM only image with:
 
-```
-docker build -t lukechilds/dockerpi:vm --target dockerpi-vm .
+```bash
+docker build -t ghcr.io/schmidt-software/dockerpi-ng:vm --target dockerpi-ng-vm .
 ```
 
 ## Credit
 
-Thanks to [@dhruvvyas90](https://github.com/dhruvvyas90) for his [dhruvvyas90/qemu-rpi-kernel](https://github.com/dhruvvyas90/qemu-rpi-kernel) repo.
+Thanks to [@dhruvvyas90](https://github.com/dhruvvyas90) for his
+[dhruvvyas90/qemu-rpi-kernel](https://github.com/dhruvvyas90/qemu-rpi-kernel) repo.
 
 ## License
 
-MIT © Luke Childs
+MIT © Michael Schmidt
